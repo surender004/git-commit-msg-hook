@@ -1,0 +1,21 @@
+#!/bin/bash
+
+COMMIT_MSG_FILE=".git/COMMIT_EDITMSG"
+COMMIT_MSG_OUTPUT="grep -v '^#' ${COMMIT_MSG_FILE}"
+JIRA_ID="${COMMIT_MSG_OUTPUT} | awk 'NR==1'"
+
+
+function error_msg {
+    echo "Fail to commit changes!"
+    echo ""
+    echo "Possible reasons:"
+    echo " - Jira id not passed"
+    exit 1
+}
+
+
+function run_commit_msg_hook {
+    [[ `eval ${JIRA_ID}` =~ ^[A-Z] ]] || error_msg
+}
+
+run_commit_msg_hook
